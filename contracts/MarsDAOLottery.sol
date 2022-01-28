@@ -234,10 +234,10 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         pendingPriceTicketInMars = _priceTicketInMars;
     }
 
-    function cancelLottaryAndCloseContract(uint256 _lotteryId) external onlyOwner {
-        require(getLotteryStatus(_lotteryId)==Status.Open,"require Open status");
-        lotteries[_lotteryId].finalNumber=101;
-        emit LotteryCanceled(_lotteryId);
+    function cancelLottaryAndCloseContract() external onlyOwner {
+        uint256 latestLotteryId=getCurrentLotteryId();
+        lotteries[latestLotteryId].finalNumber=101;
+        emit LotteryCanceled(latestLotteryId);
     }
 
     function setRandomOracleFee(uint256 _randomOracleFee) external onlyOwner {
