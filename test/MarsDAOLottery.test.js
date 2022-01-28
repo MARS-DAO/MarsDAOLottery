@@ -16,15 +16,15 @@ contract('MarsDAOLottery', ([alice, bob, carol, scot,developer]) => {
         this.link=await IERC20.at(LINKToken);
         this.newMars = await MockERC20.new('newMars', 'newMars', web3.utils.toWei("10000000", "ether"), { from: alice });
         this.MarsDAOLottery = await MarsDAOLottery.new(this.newMars.address,developer,VRFCoordinator,LINKToken, { from: alice });
-        await this.newMars.transfer(bob,web3.utils.toWei("1000", "ether"),{ from: alice });
-        await this.newMars.transfer(carol,web3.utils.toWei("1000", "ether"),{ from: alice });
-        await this.newMars.transfer(scot,web3.utils.toWei("1000", "ether"),{ from: alice });
-        await this.newMars.transfer(developer,web3.utils.toWei("1000", "ether"),{ from: alice });
-        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("1000", "ether"), { from: alice });
-        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("1000", "ether"), { from: bob });
-        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("1000", "ether"), { from: carol });
-        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("1000", "ether"), { from: scot });
-        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("1000", "ether"), { from: developer });
+        await this.newMars.transfer(bob,web3.utils.toWei("10000", "ether"),{ from: alice });
+        await this.newMars.transfer(carol,web3.utils.toWei("10000", "ether"),{ from: alice });
+        await this.newMars.transfer(scot,web3.utils.toWei("10000", "ether"),{ from: alice });
+        await this.newMars.transfer(developer,web3.utils.toWei("10000", "ether"),{ from: alice });
+        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("10000", "ether"), { from: alice });
+        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("10000", "ether"), { from: bob });
+        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("10000", "ether"), { from: carol });
+        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("10000", "ether"), { from: scot });
+        await this.newMars.approve(this.MarsDAOLottery.address, web3.utils.toWei("10000", "ether"), { from: developer });
         
         await network.provider.request({
             method: 'hardhat_impersonateAccount',
@@ -70,6 +70,23 @@ contract('MarsDAOLottery', ([alice, bob, carol, scot,developer]) => {
         await this.MarsDAOLottery.claimTickets(0,{ from: developer });
         expect((await this.MarsDAOLottery.getLottery(0)).rewardBalance)
         .to.eq((await this.newMars.balanceOf(this.MarsDAOLottery.address)).toString(10));
-    });   
+    }); 
+    
+    it('cancelLottaryAndStopContract', async () => {
+        await this.MarsDAOLottery.buyTickets(20,{ from: alice });
+        await this.MarsDAOLottery.buyTickets(20,{ from: bob });
+        await this.MarsDAOLottery.cancelLottaryAndStopContract({ from: alice });
+        await expectRevert(
+            this.MarsDAOLottery.buyTickets(20,{ from: scot }),
+            'Buying in this contract is not more available.'
+        );
+        await this.MarsDAOLottery.claimTickets(1,{ from: alice });
+        await this.MarsDAOLottery.claimTickets(1,{ from: bob });
+        expect((await this.MarsDAOLottery.getLottery(0)).rewardBalance)
+        .to.eq((await this.newMars.balanceOf(this.MarsDAOLottery.address)).toString(10));
+        expect((await this.MarsDAOLottery.getLottery(1)).rewardBalance)
+        .to.eq('0');
+
+    });
 
 });

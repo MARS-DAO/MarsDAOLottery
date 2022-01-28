@@ -26,9 +26,9 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
     uint256 public constant BP=10000;
     mapping(bytes32=>uint256) private latestRequest;
 
-    event LotteryDrawOpened(uint256 lotteryId);
-    event LotteryDrawClosed(uint256 lotteryId, uint256 finalNumber);
-    event LotteryCanceled(uint256 lotteryId);
+    event Launched(uint256 lotteryId);
+    event ReadyToBeClaimed(uint256 lotteryId, uint256 finalNumber);
+    event ContractStopedAndLotteryCanceled(uint256 lotteryId);
 
 
     enum Status {
@@ -65,7 +65,7 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         feeAddress=_feeAddress;
         lotteries.push(Lottery(pendingPriceTicketInMars,0,0,0));
         require(feeBP.add(burnBP)==1000,"feeBP+burnBP must eq 1000");
-        emit LotteryDrawOpened(0);
+        emit Launched(0);
     }
 
     function buyTickets(uint256 numberOfTickets)
@@ -79,7 +79,7 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         uint256 latestLotteryId=getCurrentLotteryId();
         
         require(getLotteryStatus(latestLotteryId)==Status.Open,
-        "Buying in this contract is not more available .");
+        "Buying in this contract is not more available.");
 
         Lottery storage currentLottery=lotteries[latestLotteryId];
         uint256[] storage userTickets=tickets[msg.sender][latestLotteryId];
@@ -109,7 +109,7 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
                 latestRequest[reqId]=latestLotteryId;
                 //open
                 lotteries.push(Lottery(pendingPriceTicketInMars,0,0,0));
-                emit LotteryDrawOpened(latestLotteryId.add(1));
+                emit Launched(latestLotteryId.add(1));
                 return;
             }
         }
@@ -227,17 +227,17 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         Lottery storage currentLottery=lotteries[lotteryId];
         require(currentLottery.finalNumber == 0 && currentLottery.lastTicketId==100, "Wrong requestId");
         currentLottery.finalNumber=randomness.mod(100).add(1);
-        emit LotteryDrawClosed(lotteryId, currentLottery.finalNumber);
+        emit ReadyToBeClaimed(lotteryId, currentLottery.finalNumber);
     }
 
     function setPriceTicketInMars(uint256 _priceTicketInMars) external onlyOwner {
         pendingPriceTicketInMars = _priceTicketInMars;
     }
 
-    function cancelLottaryAndCloseContract() external onlyOwner {
+    function cancelLottaryAndStopContract() external onlyOwner {
         uint256 latestLotteryId=getCurrentLotteryId();
         lotteries[latestLotteryId].finalNumber=101;
-        emit LotteryCanceled(latestLotteryId);
+        emit ContractStopedAndLotteryCanceled(latestLotteryId);
     }
 
     function setRandomOracleFee(uint256 _randomOracleFee) external onlyOwner {
