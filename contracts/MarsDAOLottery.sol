@@ -46,10 +46,6 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         uint256 rewardBalance;
     }
     
-    struct Ticket {
-        uint256 lotteryId;
-        uint256 ticketId;
-    }
 
     mapping(address => mapping(uint256=>uint256[])) private tickets;
     Lottery[] private lotteries;
