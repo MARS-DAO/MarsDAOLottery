@@ -6,7 +6,7 @@ import "./lib/Ownable.sol";
 import "./lib/IERC20.sol";
 import "./lib/SafeERC20.sol";
 import "./lib/ReentrancyGuard.sol";
-//import "./lib/console.sol";
+import "./lib/console.sol";
 
 pragma experimental ABIEncoderV2;
 
@@ -44,6 +44,11 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         uint256 lastTicketId;
         uint256 finalNumber;
         uint256 rewardBalance;
+    }
+
+    struct Ticket{
+        uint256 lotteryId;
+        uint256[]  tickets;
     }
     
 
@@ -188,6 +193,30 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
 
     function getUserTickets(uint256 _lotteryId,address _user) public view returns (uint256[] memory){
         return tickets[_user][_lotteryId];
+    }
+
+    function getUserTicketsByLottariesList(uint256 _maxLottaries,address _user) 
+        external 
+        view 
+        returns (Ticket[] memory){
+        
+        //lotteries.length >0 always
+        uint256 minIndex = lotteries.length>_maxLottaries ? lotteries.length.sub(_maxLottaries) : 0;
+        uint256 i = lotteries.length;
+        uint256 x =0;
+        Ticket[] memory uTickets=new Ticket[](lotteries.length.sub(minIndex));
+        do{
+            i--;
+            uint256[] memory _tickets=tickets[_user][i];
+            if(_tickets.length>0){
+                uTickets[x]=Ticket(i,_tickets);
+                x++;
+            }
+        }while(i > minIndex);
+
+        assembly { mstore(uTickets, x)}
+
+        return uTickets;
     }
 
     function getCurrentLotteryId() public view returns (uint256) {

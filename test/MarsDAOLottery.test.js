@@ -60,6 +60,7 @@ contract('MarsDAOLottery', ([alice, bob, carol, scot,developer]) => {
         expect((await this.MarsDAOLottery.getLotteryStatus(0)).toString(10)).to.eq('3');//Claimable
         expect((await this.MarsDAOLottery.getLottery(0)).rewardBalance)
         .to.eq((await this.newMars.balanceOf(this.MarsDAOLottery.address)).toString(10));
+        //console.log(await this.MarsDAOLottery.getUserTicketsByLottariesList(100,bob));
     });
 
     it('claimTickets', async () => {
