@@ -6,7 +6,7 @@ import "./lib/Ownable.sol";
 import "./lib/IERC20.sol";
 import "./lib/SafeERC20.sol";
 import "./lib/ReentrancyGuard.sol";
-import "./lib/console.sol";
+//import "./lib/console.sol";
 
 pragma experimental ABIEncoderV2;
 

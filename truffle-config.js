@@ -70,7 +70,7 @@ module.exports = {
        //provider: () => new HDWalletProvider([process.env.PRIVATE_KEY_BSC_TEST], process.env.INFURA_BSC),
        provider: () => new HDWalletProvider({
          providerOrUrl: process.env.BSC_TEST_RPC_URL,
-         privateKeys: [process.env.PRIVATE_KEY_BSC]
+         privateKeys: [process.env.PRIVATE_KEY_BSC_TEST]
        }),
        url: process.env.BSC_TEST_RPC_URL,
        network_id: 97
