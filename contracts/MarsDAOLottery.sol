@@ -148,13 +148,13 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         
         uint256[] memory userTickets=tickets[_user][_lotteryId];
         Lottery memory currentLottery=lotteries[_lotteryId];
-        Status lottaryStatus=getLotteryStatus(_lotteryId);
+        Status lotteryStatus=getLotteryStatus(_lotteryId);
 
-        if(lottaryStatus==Status.Canceled){
+        if(lotteryStatus==Status.Canceled){
             return userTickets.length.mul(currentLottery.priceTicketInMars);
         }
 
-        if(lottaryStatus!=Status.Claimable 
+        if(lotteryStatus!=Status.Claimable 
         || userTickets.length==0){
             return 0;
         }
@@ -195,13 +195,13 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         return tickets[_user][_lotteryId];
     }
 
-    function getUserTicketsByLottariesList(uint256 _maxLottaries,address _user) 
+    function getUserTicketsByLotteriesList(uint256 _maxLotteries,address _user) 
         external 
         view 
         returns (Ticket[] memory){
         
         //lotteries.length >0 always
-        uint256 minIndex = lotteries.length>_maxLottaries ? lotteries.length.sub(_maxLottaries) : 0;
+        uint256 minIndex = lotteries.length>_maxLotteries ? lotteries.length.sub(_maxLotteries) : 0;
         uint256 i = lotteries.length;
         uint256 x =0;
         Ticket[] memory uTickets=new Ticket[](lotteries.length.sub(minIndex));
@@ -263,7 +263,7 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
         pendingPriceTicketInMars = _priceTicketInMars;
     }
 
-    function cancelLottaryAndStopContract() external onlyOwner {
+    function cancelLotteryAndStopContract() external onlyOwner {
         uint256 latestLotteryId=getCurrentLotteryId();
         lotteries[latestLotteryId].finalNumber=101;
         emit ContractStopedAndLotteryCanceled(latestLotteryId);

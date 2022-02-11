@@ -5,10 +5,10 @@ const MarsTpokenERC20 = artifacts.require('MockERC20');
 module.exports = async (deployer, network) => {
   
   if (network == "bscmain") { 
-    const marsAddress="not deployed yet";
+    const marsAddress="0xFcf34E82c11302C1331e7c5ebE3296C978C7342f";
     const VRFCoordinator="0x747973a5A2a4Ae1D3a8fDF5479f1514F65Db9C31";
     const LINKToken="0x404460C6A5EdE2D891e8297795264fDe62ADBB75";
-    const feeAdr="0x9724EC9c28AB13BE9E24C1834cb6f0c8949Aff6f";
+    const feeAdr="0x53D8481C4ee35bC789E1acaB7129e8dF1205C519";
     try{
       await deployer.deploy(MarsDAOLottery,marsAddress,feeAdr,VRFCoordinator,LINKToken);
     }catch(err){

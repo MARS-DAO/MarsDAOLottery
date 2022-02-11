@@ -60,7 +60,7 @@ contract('MarsDAOLottery', ([alice, bob, carol, scot,developer]) => {
         expect((await this.MarsDAOLottery.getLotteryStatus(0)).toString(10)).to.eq('3');//Claimable
         expect((await this.MarsDAOLottery.getLottery(0)).rewardBalance)
         .to.eq((await this.newMars.balanceOf(this.MarsDAOLottery.address)).toString(10));
-        //console.log(await this.MarsDAOLottery.getUserTicketsByLottariesList(100,bob));
+        //console.log(await this.MarsDAOLottery.getUserTicketsByLotteriesList(100,bob));
     });
 
     it('claimTickets', async () => {
@@ -73,10 +73,10 @@ contract('MarsDAOLottery', ([alice, bob, carol, scot,developer]) => {
         .to.eq((await this.newMars.balanceOf(this.MarsDAOLottery.address)).toString(10));
     }); 
     
-    it('cancelLottaryAndStopContract', async () => {
+    it('cancelLotteryAndStopContract', async () => {
         await this.MarsDAOLottery.buyTickets(20,{ from: alice });
         await this.MarsDAOLottery.buyTickets(20,{ from: bob });
-        await this.MarsDAOLottery.cancelLottaryAndStopContract({ from: alice });
+        await this.MarsDAOLottery.cancelLotteryAndStopContract({ from: alice });
         await expectRevert(
             this.MarsDAOLottery.buyTickets(20,{ from: scot }),
             'Buying in this contract is not more available.'
