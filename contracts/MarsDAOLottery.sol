@@ -29,6 +29,8 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
     event Launched(uint256 lotteryId);
     event ReadyToBeClaimed(uint256 lotteryId, uint256 finalNumber);
     event ContractStopedAndLotteryCanceled(uint256 lotteryId);
+    event ClaimTickets(address user, uint256 lotteryId, uint256 reward);
+    event BuyTickets(address user, uint256 lotteryId, uint256 numberOfTickets);
 
 
     enum Status {
@@ -119,6 +121,7 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
             }
         }
         currentLottery.lastTicketId = lastTicketId;
+        emit BuyTickets(msg.sender, latestLotteryId, numberOfTickets);
     }
 
     function claimTickets(uint256 _lotteryId) external {
@@ -141,6 +144,7 @@ contract MarsDAOLottery is VRFConsumerBase, Ownable, ReentrancyGuard {
 
             currentLottery.rewardBalance=currentLottery.rewardBalance.sub(reward);
             marsToken.safeTransfer(msg.sender, reward);
+            emit ClaimTickets(msg.sender, _lotteryId, reward);
         }
     }
 
