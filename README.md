@@ -9,8 +9,8 @@ Network: **Binance Smart Chain**.
 
 | Contract       | Address                                    |
 | -------------- | ------------------------------------------ |
-| MarsDAOLottery | 0xEe875c80cA7F01bb0741B34b9dDfDD899e65c1b5 |
-| VRFCOORDINATOR | 0xbdf4F7f5C34c9537a2E395b25639C40635a3f9A5 |
+| MarsDAOLottery | 0x9ea1556eDdB00001c9eb19f60923777A0E52C48b |
+| VRFCOORDINATOR | 0x747973a5A2a4Ae1D3a8fDF5479f1514F65Db9C31 |
 
 ## Setup
 
